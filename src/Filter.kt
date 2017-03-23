@@ -2,7 +2,7 @@ import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.File
 
-class Filter(val inputFile: File, val request: Request) {
+class Filter(private val inputFile: File, private val request: Request) {
     fun filter() {
         val outputFile: File = File("temp.txt")
         val reader: BufferedReader = inputFile.bufferedReader()
