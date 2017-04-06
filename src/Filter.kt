@@ -1,18 +1,14 @@
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.File
+import java.io.*
 
-class Filter(private val inputFile: File, private val request: Request) {
+class Filter(private val reader: Reader,
+             private val writer: Writer,
+             private val request: Request) {
     fun filter() {
-        val outputFile: File = File("temp.txt")
-        val reader: BufferedReader = inputFile.bufferedReader()
-        val writer: BufferedWriter = outputFile.bufferedWriter()
-        var str: String? = reader.readLine()
-        while (str != null) {
-            if (request.isSatisfy(str)) writer.appendln(str)
-            str = reader.readLine()
+        var str = reader.buffered().readLine()
+        while(str != null) {
+            if (request.isSatisfy(str)) writer.write(str)
+            str = reader.buffered().readLine()
         }
-        writer.close()
         reader.close()
     }
 }
