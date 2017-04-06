@@ -4,11 +4,10 @@ class Filter(private val reader: Reader,
              private val writer: Writer,
              private val request: Request) {
     fun filter() {
-        var str = reader.buffered().readLine()
-        while(str != null) {
-            if (request.isSatisfy(str)) writer.write(str)
-            str = reader.buffered().readLine()
-        }
+        reader.readLines()
+                .filter { request.isSatisfy(it) }
+                .forEach { writer.write("$it\n") }
         reader.close()
+        writer.close()
     }
 }

@@ -36,7 +36,7 @@ class RequestTest {
                         .build()
         )
         val testStrs = arrayOf(
-                "0123456789 _+-.,!@#$%^&*();|<>'",
+                """0123456789 _+-.,!@#$%^&*();|<>"'""",
                 "sample text for testing:",
                 "555.123.4567	+1-(800)-555-2468",
                 "https://mediatemple.net",
