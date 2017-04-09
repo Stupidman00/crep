@@ -7,9 +7,7 @@ class FilterTest {
     @Test
     fun filter() {
         val results = arrayOf(
-                """
-
-0123456789 _+-.,!@#$%^&*();\/|<>"'
+                """0123456789 _+-.,!@#$%^&*();\/|<>"'
 12345 -98.7 3.141 .6180 9,000 +42
 555.123.4567	+1-(800)-555-2468
 \\+[0-9]-\\([0-9]+\\)
@@ -22,16 +20,12 @@ Sample text for testing:
 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
 foo@demo.net	bar.ba@test.co.uk
 """,
-                """
-
-0123456789 _+-.,!@#$%^&*();\/|<>"'
+                """0123456789 _+-.,!@#$%^&*();\/|<>"'
 12345 -98.7 3.141 .6180 9,000 +42
 555.123.4567	+1-(800)-555-2468
 \\+[0-9]-\\([0-9]+\\)
 """,
-                """
-
-0123456789 _+-.,!@#$%^&*();\/|<>"'
+                """0123456789 _+-.,!@#$%^&*();\/|<>"'
 12345 -98.7 3.141 .6180 9,000 +42
 555.123.4567	+1-(800)-555-2468
 www.demo.com	http://foo.co.uk/
@@ -44,12 +38,10 @@ https://mediatemple.net
 Sample text for testing:
 """,
                 """Welcome to RegExr v2.1 by gskinner.com, proudly hosted by Media Temple!
-
 Edit the Expression & Text to see matches. Roll over matches or the expression for
 details. Undo mistakes with ctrl-z. Save Favorites & Share expressions with friends or
 the Community. Explore your results with Tools. A full Reference & Help is available
 in the Library, or watch the video Tutorial.
-
 Sample text for testing:
 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
 0123456789 _+-.,!@#$%^&*();\/|<>"'
@@ -93,12 +85,15 @@ https://mediatemple.net
                 Request.Builder("Welcome to RegExr")
                         .build()
         )
-        val testFile = File("out/production/crep/input")
-        val resultFile = File("testTemp.txt")
         for(i in 0..7) {
-            Filter(testFile.bufferedReader(), resultFile.writer(), requests[i]).filter()
+            val resultFile = File("testTemp.txt")
+            val resultFileWriter = resultFile.bufferedWriter()
+            val testFileReader = File("out/production/crep/input").bufferedReader()
+            Filter(requests[i]).filter(testFileReader, resultFileWriter)
+            resultFileWriter.close()
+            testFileReader.close()
             assertEquals(results[i], resultFile.readText())
-            resultFile.delete()
+            resultFile.deleteOnExit()
         }
     }
 

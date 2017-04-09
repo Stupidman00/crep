@@ -8,32 +8,22 @@ data class Request private constructor(private val word: String,
         private var ignoreCase = false
         private var inverted = false
 
-        fun setRegex(value: Boolean): Builder {
-            regex = value
-            return this
-        }
+        fun setRegex(value: Boolean) = this.apply { regex = value }
 
-        fun setIgnoreCase(value: Boolean): Builder {
-            ignoreCase = value
-            return this
-        }
+        fun setIgnoreCase(value: Boolean) = this.apply { ignoreCase = value }
 
-        fun setInverted(value: Boolean): Builder {
-            inverted = value
-            return this
-        }
+        fun setInverted(value: Boolean) = this.apply { inverted = value }
 
-        fun build(): Request {
-            return Request(word, regex, ignoreCase, inverted)
-        }
+        fun build() = Request(word, regex, ignoreCase, inverted)
     }
 
     fun isSatisfy(str: String): Boolean {
-        return inverted xor when {
+        val temp = when {
             regex && ignoreCase -> str.contains(word.toRegex(RegexOption.IGNORE_CASE))
             ignoreCase          -> str.contains(word, true)
             regex               -> str.contains(word.toRegex())
             else                -> str.contains(word)
         }
+        return if (inverted) !temp else temp
     }
 }

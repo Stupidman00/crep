@@ -1,5 +1,6 @@
 import com.beust.jcommander.*
 import java.io.File
+import java.io.FileNotFoundException
 
 fun main(args: Array<String>) {
     val crep = Crep()
@@ -20,7 +21,8 @@ class Crep {
     @Parameter(description = "Word for searching")
     private var word = mutableListOf<String>()
 
-    @Parameter(names = arrayOf("-files"), description = "Files", variableArity = true)
+    @Parameter(names = arrayOf("-files", "-f"), description = "Files",
+            variableArity = true)
     private var fileNames = listOf<String>()
 
     fun run() {
@@ -29,17 +31,25 @@ class Crep {
                 .setIgnoreCase(ignoreCase)
                 .setInverted(inverted)
                 .build()
+        val writer = System.out.bufferedWriter()
         for (filename in fileNames) {
             try {
-                Filter(File(filename).bufferedReader(),System.out.bufferedWriter(), request).filter()
+                val reader = File(filename).bufferedReader()
+                Filter(request).filter(reader, writer)
+                reader.close()
             }
-            catch (e: Exception) {
-                println("This file not found: $filename")
+            catch (e: FileNotFoundException) {
+                System.err.println("This file not found: $filename.")
             }
         }
+        writer.close()
     }
 
     override fun toString(): String {
-        return "Crep(inverted=$inverted, ignoreCase=$ignoreCase, regex=$regex, word=$word, fileNames=$fileNames)"
+        return "Crep(inverted=$inverted, " +
+                "ignoreCase=$ignoreCase, " +
+                "regex=$regex, " +
+                "word=$word, " +
+                "fileNames=$fileNames)"
     }
 }

@@ -1,13 +1,10 @@
 import java.io.*
 
-class Filter(private val reader: Reader,
-             private val writer: Writer,
-             private val request: Request) {
-    fun filter() {
+class Filter(private val request: Request) {
+    fun filter(reader: Reader, writer: Writer) {
         reader.readLines()
-                .filter { request.isSatisfy(it) }
+                .filter { it != "" && request.isSatisfy(it) }
                 .forEach { writer.write("$it\n") }
-        reader.close()
-        writer.close()
+        writer.flush()
     }
 }
