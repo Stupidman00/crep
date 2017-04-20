@@ -11,8 +11,7 @@ fun main(args: Array<String>) {
         val crep = Crep()
         JCommander(crep, *args)
         crep.run()
-    }
-    catch (e: ParameterException) {
+    } catch (e: ParameterException) {
         System.err.println(e.message)
     }
 }
@@ -35,8 +34,13 @@ class Crep {
     private var fileNames = listOf<String>()
 
     fun run() {
-        if (word.size != 1) throw ParameterException(
-                "Redundant arguments: ${word.filterIndexed { index, s -> index != 0 }}")
+        if (word.size != 1) {
+            System.err.print("Redundant arguments: ")
+            for (index in 1..word.size - 2) {
+                System.err.print("${word[index]}, ")
+            }
+            System.err.println(word[word.size - 1])
+        }
         val request = Request.Builder(word[0])
                 .setRegex(regex)
                 .setIgnoreCase(ignoreCase)
@@ -48,8 +52,7 @@ class Crep {
                 val reader = File(filename).bufferedReader()
                 Filter(request).filter(reader, writer)
                 reader.close()
-            }
-            catch (e: FileNotFoundException) {
+            } catch (e: FileNotFoundException) {
                 System.err.println("This file not found: $filename.")
             }
         }
