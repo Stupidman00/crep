@@ -1,3 +1,4 @@
+package core
 
 data class Request private constructor(private val word: String,
                                        private val regex: Boolean = false,

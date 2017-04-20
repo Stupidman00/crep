@@ -1,3 +1,5 @@
+import core.Filter
+import core.Request
 import org.junit.Test
 
 import org.junit.Assert.*

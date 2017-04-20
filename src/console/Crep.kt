@@ -1,11 +1,20 @@
+package console
+
 import com.beust.jcommander.*
+import core.Filter
+import core.Request
 import java.io.File
 import java.io.FileNotFoundException
 
 fun main(args: Array<String>) {
-    val crep = Crep()
-    JCommander(crep, *args)
-    crep.run()
+    try {
+        val crep = Crep()
+        JCommander(crep, *args)
+        crep.run()
+    }
+    catch (e: ParameterException) {
+        System.err.println(e.message)
+    }
 }
 
 class Crep {
@@ -18,15 +27,17 @@ class Crep {
     @Parameter(names = arrayOf("-r"), description = "Regex mode")
     private var regex = false
 
-    @Parameter(description = "Word for searching")
+    @Parameter(description = "Word for searching", required = true)
     private var word = mutableListOf<String>()
 
     @Parameter(names = arrayOf("-files", "-f"), description = "Files",
-            variableArity = true)
+            variableArity = true, required = true)
     private var fileNames = listOf<String>()
 
     fun run() {
-        val request = Request.Builder(word.joinToString(" "))
+        if (word.size != 1) throw ParameterException(
+                "Redundant arguments: ${word.filterIndexed { index, s -> index != 0 }}")
+        val request = Request.Builder(word[0])
                 .setRegex(regex)
                 .setIgnoreCase(ignoreCase)
                 .setInverted(inverted)
@@ -46,7 +57,7 @@ class Crep {
     }
 
     override fun toString(): String {
-        return "Crep(inverted=$inverted, " +
+        return "console.Crep(inverted=$inverted, " +
                 "ignoreCase=$ignoreCase, " +
                 "regex=$regex, " +
                 "word=$word, " +
